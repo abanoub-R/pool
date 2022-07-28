@@ -1,3 +1,5 @@
+# script that builds the linux kernel for you
+
 #!/bin/sh
 
 cd /usr/src/linux
@@ -5,6 +7,7 @@ cd /usr/src/linux
 make -j8
 make -j8 modules_install
 make install
+grub-mkconfig -o /boot/grub/grub.cfg
 
 echo "Reboot? (y/n)"
 read choice
