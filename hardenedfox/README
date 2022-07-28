@@ -15,7 +15,18 @@ NOTE  - this profile was NOT built with enterprise policy features in mind.
         the user-overrides.js file also includes extra freatures to make
         firefox more usable.
        
-USAGE - make a new profile through about:profiles. when done, close firefox
+USAGE - this assumes you want to make a new profile, to override
+        
+        !!!      BEFORE GOING ANY FURTHER, CLOSE FIREFOX      !!!  
+        
+        to make a new profile through about:profiles, click on the
+        "Create a new profile" button, and it'll walk you through
+        the wizard.
+        
+        to create a profile through the terminal, run:
+        
+        firefox -no-remote -ProfileManager
+        
         and extract profile.zip into the root directory of your new profile
         which will typically be:
         
