@@ -1,0 +1,28 @@
+NOTE  - the user/user-overrides.js files as well as updater.sh are not mine, 
+        they come from the arkenfox/user.js repository, see it here:
+        
+        https://github.com/arkenfox/user.js
+
+        the profile included in profile.zip is a slightly tweaked version
+        from ffprofile.com, the profile is made with some quality-of-life
+        features, but they may be overridden by the settings in user.js.
+        to change these settings, edit user-overrides.js to your liking,
+        then run updater.sh which will add your changes safely to user.js 
+        and download the newest copy of the user.js file
+        
+        the user-overrides.js file also includes extra freatures to make
+        firefox more usable.
+       
+USAGE - make a new profile through about:profiles. when done, close firefox
+        and extract profile.zip into the root directory of your new profile
+        which will typically be:
+        
+        ~/.mozilla/firefox/*.<NAME OF YOUR PROFILE>
+        
+        then move user.js and user-overrides.js into that root directory,
+        and run updater.sh to refresh user.js since the overrides should
+        be already applied.
+
+END   - read the arkenfox/user.js wiki:
+    
+        https://github.com/arkenfox/user.js/wiki
