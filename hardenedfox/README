@@ -1,4 +1,6 @@
-NOTE  - the user/user-overrides.js files as well as updater.sh are not mine, 
+NOTE  - this profile was NOT built with enterprise policy features in mind.
+
+        the user/user-overrides.js files as well as updater.sh are not mine, 
         they come from the arkenfox/user.js repository, see it here:
         
         https://github.com/arkenfox/user.js
@@ -22,7 +24,17 @@ USAGE - make a new profile through about:profiles. when done, close firefox
         then move user.js and user-overrides.js into that root directory,
         and run updater.sh to refresh user.js since the overrides should
         be already applied.
+        
+        to just use the addons, extract the addons.zip file to the root
+        profile directory. when using addons.zip only, note the following
+        from the ffprofile website:
+        
+        "When you download only the addons.zip, you need to copy the 
+        user_pref("extensions.autoDisableScopes", 14); line into your 
+        prefs.js, otherwise firefox won't install the addons."
 
 END   - read the arkenfox/user.js wiki:
     
         https://github.com/arkenfox/user.js/wiki
+        
+        thank you for using my hardened firefox config, have a nice day!
