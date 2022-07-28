@@ -1,0 +1,20 @@
+#!/bin/sh
+
+cd /usr/src/linux
+
+make -j8
+make -j8 modules_install
+make install
+
+echo "Reboot? (y/n)"
+read choice
+
+case $choice in
+	y)
+	  echo "Rebooting..."
+	  reboot
+	  ;;
+	
+	*)
+	  echo "Quitting"
+esac
