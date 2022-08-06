@@ -28,7 +28,7 @@ See the above repository for updates as well as full license text. */
   border-inline: none !important;
 }
 
-#TabsToolbar{
+#TabsToolbar {
   --toolbarbutton-inner-padding: 1px !important;
 }
 #navigator-toolbox:not([movingtab]) > #titlebar > #TabsToolbar{
@@ -204,7 +204,7 @@ See the above repository for updates as well as full license text. */
 /* Bring back tab separator lines that were removed in Proton */
 
 .tabbrowser-tab{
-  border-inline-end: 1px solid transparent !important;
+  border-inline-end:0px solid transparent !important;
   border-image: 0 1 linear-gradient(
     transparent 20%,
     color-mix(in srgb, currentColor 20%, transparent) 20%,
@@ -291,9 +291,69 @@ menupopup > menuitem, menupopup > menu {
 
 :root {	
   --tab-min-height: 16px !important;
-  --tab-max-height: 16px !important;
   --tabs-border-color: rgba(0,0,0,.3);
   --tabs-navbar-shadow-size: 1px;
   --uc-active-tab-width: clamp(130px, 30vw, 210px);
   --uc-inactive-tab-width: clamp(80px, 30vw, 120px);
+}
+
+/*** Proton Tabs Tweaks ***/
+
+/* Adjust tab corner shape, optionally remove space below tabs */
+
+#tabbrowser-tabs {
+    --user-tab-rounding: 0px;
+}
+
+.tab-background {
+    border-radius: var(--user-tab-rounding) var(--user-tab-rounding) 0px 0px !important; /* Connected */
+    margin-block: 1px 0 !important; /* Connected */
+}
+#scrollbutton-up, #scrollbutton-down { /* 6/10/2021 */
+    border-top-width: 1px !important;
+    border-bottom-width: 0 !important;
+}
+
+/* 1/16/2022 Tone down the Fx96 tab border with add-on themes in certain fallback situations */
+.tab-background:is([selected], [multiselected]):-moz-lwtheme {
+    --lwt-tabs-border-color: rgba(0, 0, 0, 0.5) !important;
+    border-bottom-color: transparent !important;
+}
+[brighttext="true"] .tab-background:is([selected], [multiselected]):-moz-lwtheme {
+    --lwt-tabs-border-color: rgba(255, 255, 255, 0.5) !important;
+    border-bottom-color: transparent !important;
+}
+
+/* Container color bar visibility */
+.tabbrowser-tab[usercontextid] > .tab-stack > .tab-background > .tab-context-line {
+    margin: 0px max(calc(var(--user-tab-rounding) - 3px), 0px) !important;
+}
+
+/* Override Normal Density height to Compact Density height only for tabs */
+
+#TabsToolbar, #tabbrowser-tabs {
+    --tab-min-height: 29px !important;
+}
+    /* Tweak for covering a line at the bottom of the active tab on some themes 8/11/2021 */
+#main-window[sizemode="normal"] #toolbar-menubar[autohide="true"] + #TabsToolbar,
+#main-window[sizemode="normal"] #toolbar-menubar[autohide="true"] + #TabsToolbar #tabbrowser-tabs {
+    --tab-min-height: 30px !important;
+}
+#scrollbutton-up,
+#scrollbutton-down {
+    border-top-width: 0 !important;
+    border-bottom-width: 0 !important;
+}
+
+    /* [Connected Tabs] Set a max height based on min-height plus margin-block: 1px 0 */
+#TabsToolbar, #TabsToolbar > hbox, #TabsToolbar-customization-target, #tabbrowser-arrowscrollbox  {
+    max-height: calc(var(--tab-min-height) + 1px) !important;
+}
+    /* [Connected Tabs] Adjust padding around icons on buttons to avoid crushed images */
+#TabsToolbar-customization-target toolbarbutton > .toolbarbutton-icon,
+#TabsToolbar-customization-target .toolbarbutton-text,
+#TabsToolbar-customization-target .toolbarbutton-badge-stack,
+#scrollbutton-up,#scrollbutton-down {
+    padding-top: 7px !important;
+    padding-bottom: 6px !important;
 }
