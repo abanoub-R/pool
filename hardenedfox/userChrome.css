@@ -1,0 +1,299 @@
+/* Source file https://github.com/MrOtherGuy/firefox-csshacks/tree/master/chrome/non_floating_sharp_tabs.css made available under Mozilla Public License v. 2.0
+See the above repository for updates as well as full license text. */
+
+/* This style makes tabs and related items non-rounded and connects tabs to toolbars like in previous Firefox versions. */
+
+/* It's not strictly a requirement, but this style expects compact_proton.css to be loaded before it. */
+
+:root[id]{
+  --proton-tab-block-margin: -1px !important;
+  --tab-block-margin: -1px !important;
+  --tabs-shadow-size: -11px !important;
+  
+  /* Remove next line if you want selected tab to have color other than toolbar background - then it follows your theme color  */
+  --lwt-selected-tab-background-color: var(--toolbar-bgcolor) !important; 
+}
+
+/* Uncomment next line to force specific color for tab top line */
+/* #tabbrowser-tabs{ --tab-line-color: blue !important; } */
+
+/* These next two rules set a color for border around tabs and between tabs & navigation toolbars. Set to transparent to remove the border.*/
+#nav-bar{
+  /* This overrides value in compact_proton.css */
+  /*box-shadow: 0 -1px 0 0 color-mix(in srgb, currentcolor 30%, transparent) !important;*/
+  box-shadow: 0 calc(-1 * var(--tabs-navbar-shadow-size)) 0 var(--tabs-border-color) !important;
+}
+.tab-background[selected]{
+  /*border-inline: 1px solid color-mix(in srgb, currentcolor 30%, transparent) !important;*/
+  border-inline: none !important;
+}
+
+#TabsToolbar{
+  --toolbarbutton-inner-padding: 1px !important;
+}
+#navigator-toolbox:not([movingtab]) > #titlebar > #TabsToolbar{
+  --toolbar-bgcolor: transparent;
+}
+
+#TabsToolbar .toolbarbutton-1 > .toolbarbutton-badge-stack,
+#TabsToolbar .toolbarbutton-1 > .toolbarbutton-icon{ border-radius: 1px !important;  }
+
+/* tabs newtab button needs some special styling... */
+#tabs-newtab-button{ padding-inline: 0 !important; }
+#tabbrowser-arrowscrollbox > #tabs-newtab-button > .toolbarbutton-icon{
+  border-radius: 0 !important; 
+  width: initial !important; 
+  height: initial !important;
+  padding: 9px !important;
+}
+:root[uidensity=1] #tabbrowser-arrowscrollbox > #tabs-newtab-button > .toolbarbutton-icon{
+  padding: 9px !important;
+}
+
+#scrollbutton-up,
+#scrollbutton-down{ border-radius: 0 !important; border-width: 0 !important; padding-inline: 3px !important; }
+
+/* tab shaping */
+.tabbrowser-tab{ padding-inline: 0 !important; }
+
+:root[uidensity="compact"] #tabbrowser-tabs[positionpinnedtabs] .tabbrowser-tab[pinned]{ min-height: calc(var(--tab-min-height) - 2px) !important; }
+
+.tab-content[pinned]{ padding-inline: 4px !important; }
+
+.tab-background{
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+/* Line to mark selected tab */
+.tab-background[selected]::before,
+.tabbrowser-tab:hover > stack > .tab-background::before{
+  display: -moz-box;
+  height: 0px;
+  content: "";
+}
+.tab-stack:hover > .tab-background::before{
+  background-color: inherit;
+  height: 0px;
+}
+.tab-stack > .tab-background[selected]::before{
+  height: 0px;
+  background-color: highlight;
+  background-image: linear-gradient(var(--tab-line-color),var(--tab-line-color));
+}
+/* Photon-like tab on hover animation for the top line */
+@keyframes tab-onhover-line-anim{ from{ margin-inline: 20px } to { margin-inline: 0 } }
+
+.tab-stack:hover > .tab-background::before{ animation: tab-onhover-line-anim 160ms }
+
+/* Disable animation for selected and pinned tabs */
+.tabbrowser-tab:is([pinned],[selected]) > .tab-stack > .tab-background::before{ animation: none }
+
+/* moves context-line to the bottom */
+.tab-context-line{ -moz-box-ordinal-group: 2; margin-inline: 10px !important; }
+
+/* Non-selected tab's tab-line hover animation */
+@media (prefers-reduced-motion: no-preference) {
+  .tab-line:not([selected=true]):not([multiselected]) {
+    transition: transform 250ms var(--animation-easing-function), opacity 250ms var(--animation-easing-function);
+  }
+}
+
+/* Tab separators */
+
+.titlebar-spacer[type="pre-tabs"] {
+  border-inline-end: 1px solid var(--lwt-background-tab-separator-color, currentColor);
+  opacity: 0.2;
+}
+
+.tabbrowser-tab::after,
+.tabbrowser-tab::before {
+  border-left: 1px solid var(--lwt-background-tab-separator-color, currentColor);
+  margin-block: 5px 4px;
+  opacity: 0.3;
+}
+
+/* Move the ::before pseudo-element on tabs 1px to the left
+ * to avoid resizing the tab when the pseudo-element is removed again
+ * (this currently happens when a tab is dragged and dropped).
+ *
+ * Note that this doesn't perfectly solve the issue (dragged tabs
+ * may still resize very slightly) on some DPI settings with uneven
+ * scaling factors on Windows, because of bug 477157.
+ */
+.tabbrowser-tab::before {
+  margin-inline-start: -1px;
+}
+
+:root[tabsintitlebar]:not([extradragspace]) .tabbrowser-tab::after,
+/* Show full height tab separators on hover and multiselection. */
+.tabbrowser-tab:hover::after,
+#tabbrowser-tabs:not([movingtab]) > #tabbrowser-arrowscrollbox > .tabbrowser-tab[beforehovered]::after,
+.tabbrowser-tab[multiselected]::after,
+#tabbrowser-tabs:not([movingtab]) > #tabbrowser-arrowscrollbox > .tabbrowser-tab[before-multiselected]::after {
+  margin-top: var(--tabs-top-border-width);
+  margin-bottom: 0;
+}
+
+/* Show full height tab separators on selected tabs. */
+#tabbrowser-tabs:not([movingtab]) > #tabbrowser-arrowscrollbox > .tabbrowser-tab[beforeselected-visible]::after,
+#tabbrowser-tabs[movingtab] > #tabbrowser-arrowscrollbox > .tabbrowser-tab[visuallyselected]::before,
+.tabbrowser-tab[visuallyselected]::after {
+  border-color: var(--tabs-border-color);
+  margin-top: 0;
+  margin-bottom: var(--tabs-navbar-shadow-size);
+  opacity: 1;
+}
+
+.tabbrowser-tab::after,
+/* Also show separators beside the selected tab when dragging it. */
+#tabbrowser-tabs[movingtab] > #tabbrowser-arrowscrollbox > .tabbrowser-tab[visuallyselected]::before {
+  content: "";
+  display: block;
+}
+
+/* Source file https://github.com/MrOtherGuy/firefox-csshacks/tree/master/chrome/iconized_main_menu.css made available under Mozilla Public License v. 2.0
+See the above repository for updates as well as full license text. */
+
+/* Adds icons to main menu items which were removed in Proton */
+#appMenu-fxa-status2[fxastatus] > toolbarbutton::before,
+#appMenu-protonMainView > .panel-subview-body > toolbarbutton > image{
+  fill: currentColor;
+  -moz-context-properties: fill;
+  margin-inline: 0 8px !important;
+}
+#appMenu-new-tab-button2{ list-style-image: url("chrome://browser/skin/new-tab.svg") }
+#appMenu-new-window-button2{ list-style-image: url("chrome://browser/skin/window.svg") }
+#appMenu-new-private-window-button2{ list-style-image: url("chrome://browser/skin/privateBrowsing.svg") }
+#appMenu-bookmarks-button{ list-style-image: url("chrome://browser/skin/bookmark-star-on-tray.svg") }
+#appMenu-history-button{ list-style-image: url("chrome://browser/skin/history.svg") }
+#appMenu-downloads-button{ list-style-image: url("chrome://browser/skin/downloads/downloads.svg") }
+#appMenu-passwords-button{ list-style-image: url("chrome://browser/skin/login.svg") }
+#appMenu-extensions-themes-button{ list-style-image: url("chrome://mozapps/skin/extensions/extension.svg") }
+#appMenu-print-button2{ list-style-image: url("chrome://global/skin/icons/print.svg") }
+#appMenu-save-file-button2{ list-style-image: url("chrome://browser/skin/save.svg") }
+#appMenu-find-button2{ list-style-image: url("chrome://global/skin/icons/search-glass.svg") }
+#appMenu-settings-button{ list-style-image: url("chrome://global/skin/icons/settings.svg") }
+#appMenu-more-button2{ list-style-image: url("chrome://browser/skin/developer.svg") }
+#appMenu-help-button2{ list-style-image: url(chrome://global/skin/icons/info.svg) }
+#appMenu-quit-button2{ list-style-image: url(chrome://browser/skin/quit.svg) }
+
+/* Use account-button icon for signed in sync item */
+#appMenu-fxa-status2[fxastatus] > toolbarbutton::before{
+  display: -moz-box;
+  content: "";
+  width: 16px;
+  height: 16px;
+  background-image: var(--avatar-image-url)
+}
+/* Add somewhat hacky separator to zoom controls so it looks consistent */
+#appMenu-protonMainView > .panel-subview-body::after{
+  content: "";
+  display: -moz-box;
+  border-bottom: 1px solid var(--panel-separator-color);
+  margin: var(--panel-separator-margin);
+}
+
+#appMenu-find-button2 ~ *{
+  -moz-box-ordinal-group: 2;
+}
+
+/* Source file https://github.com/MrOtherGuy/firefox-csshacks/tree/master/chrome/tab_separator_lines.css made available under Mozilla Public License v. 2.0
+See the above repository for updates as well as full license text. */
+
+/* Bring back tab separator lines that were removed in Proton */
+
+.tabbrowser-tab{
+  border-inline-end: 1px solid transparent !important;
+  border-image: 0 1 linear-gradient(
+    transparent 20%,
+    color-mix(in srgb, currentColor 20%, transparent) 20%,
+    color-mix(in srgb, currentColor 20%, transparent) 80%,
+    transparent 80%
+  );
+}
+
+.tabbrowser-tab:hover,
+.tabbrowser-tab[beforehovered],
+.tabbrowser-tab[selected],
+.tabbrowser-tab[last-visible-tab],
+.tabbrowser-tab[beforeselected-visible]{ border-image: none !important; }
+
+/* Source file https://github.com/MrOtherGuy/firefox-csshacks/tree/master/chrome/tab_line_loading_indicator.css made available under Mozilla Public License v. 2.0
+See the above repository for updates as well as full license text. */
+
+/* Hide the normal loading indicator (just show tab-icon instead) and make the top tab-line bounce left-to-right */
+
+@keyframes tab-loading-line-anim{from{background-position-x: left}to{background-position-x: right}}
+.tabbrowser-tab[busy] > .tab-stack >  .tab-background::before,
+.tab-background[selected]::before{
+  content: "";
+  display: -moz-box;
+  height: 2px;
+  background-color:transparent;
+  background-repeat: no-repeat;
+  background-size: 100%;
+  transition: background-size 80ms linear;
+}
+
+.tabbrowser-tab[busy] > .tab-stack > .tab-background::before{
+  background-size: 10%;
+  background-image: linear-gradient(currentColor,currentColor);
+  opacity: 0.7;
+  animation: tab-loading-line-anim 400ms alternate infinite ease-in-out;
+}
+
+/*.tab-throbber{ display: none }*/
+.tab-icon-image[src]{ display: -moz-box }
+
+/*** Tighten up drop-down/context/popup menu spacing ***/
+
+menupopup > menuitem, menupopup > menu {
+  padding-block: 4px !important;
+}
+:root {
+  --arrowpanel-menuitem-padding: 4px 8px !important;
+}
+
+/* Enable urlbar border when focused */
+#urlbar:focus-within > #urlbar-background {
+    border-color: -moz-accent-color !important;
+    border-width: 1px !important;
+}
+
+#tabbrowser-tabs[haspinnedtabs]:not([positionpinnedtabs]) > #tabbrowser-arrowscrollbox > .tabbrowser-tab[first-visible-unpinned-tab] {
+  /* Disable gap between the last pinned tab and the first visible tab */
+  margin-inline-start: 0 !important;
+}
+
+/* No need, can be set with browser.tabs.tabMinWidth
+ * ref: https://support.mozilla.org/en-US/questions/1253108
+#tabbrowser-tabs {
+  --tab-min-width: 76px;
+}
+*/
+
+/* Disable tab label mask on hover */
+.tabbrowser-tab[visuallyselected=true]:hover,
+#tabbrowser-tabs:not([closebuttons=activetab]) > #tabbrowser-arrowscrollbox > .tabbrowser-tab:not([visuallyselected=true]):hover {
+  --tab-label-mask-size: 0 !important;
+}
+
+/* Disable tab label mask
+ * Proton default value = 2em
+ * This is a tweak. Photo does contain this mask.
+ 
+.tabbrowser-tab {
+  --tab-label-mask-size: 0 !important;
+}*/
+
+#tab-background {	max-height: 16px !important;}
+
+:root {	
+  --tab-min-height: 16px !important;
+  --tab-max-height: 16px !important;
+  --tabs-border-color: rgba(0,0,0,.3);
+  --tabs-navbar-shadow-size: 1px;
+  --uc-active-tab-width: clamp(130px, 30vw, 210px);
+  --uc-inactive-tab-width: clamp(80px, 30vw, 120px);
+}
