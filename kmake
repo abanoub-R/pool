@@ -10,6 +10,9 @@ make install
 cd /boot
 rm *.old
 
+# update grub
+grub-mkconfig -o /boot/grub/grub.cfg
+
 echo "Reboot? (y/n)"
 read choice
 
