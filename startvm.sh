@@ -1,5 +1,7 @@
 #!/bin/sh
 
+# sh launcher for qemu vms, change accordingly for your system #
+
 case $1 in
 	"gentoo")
 		exec qemu-system-x86_64 -enable-kvm \
