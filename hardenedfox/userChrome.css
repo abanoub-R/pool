@@ -69,15 +69,15 @@ See the above repository for updates as well as full license text. */
 .tab-background[selected]::before,
 .tabbrowser-tab:hover > stack > .tab-background::before{
   display: -moz-box;
-  height: 0px;
+  height: 2px;
   content: "";
 }
 .tab-stack:hover > .tab-background::before{
   background-color: inherit;
-  height: 0px;
+  height: 2px;
 }
 .tab-stack > .tab-background[selected]::before{
-  height: 0px;
+  height: 2px;
   background-color: highlight;
   background-image: linear-gradient(var(--tab-line-color),var(--tab-line-color));
 }
