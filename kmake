@@ -2,8 +2,9 @@
 
 cd /usr/src/linux
 
-make -j$(nproc --ignore 4)
-make -j$(nproc --ignore 4) modules_install
+make clean
+make -j8
+make -j8 modules_install
 make install
 
 # clean up
