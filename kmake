@@ -2,19 +2,115 @@
 
 cd /usr/src/linux
 
+# optimize
+threads=$(nproc)
+
+# check if cpu threads >= 12
+if [$threads -gt 12 || $threads -eq 12]
+then
+    $threads="$((threads-4))"
+else
+    case $threads in
+     4)
+       $threads=$((threads-2))  
+     ;;
+
+     *)
+       # don't do anything
+       $threads=$threads
+     ;;
+    esac
+fi
+
+# install
 make clean
-make -j8
-make -j8 modules_install
+make -j$threads
+make -j$threads modules_install
 make install
 
 # clean up
 cd /boot
 rm *.old
 
-# update grub
-grub-mkconfig -o /boot/grub/grub.cfg
+# clear the screen for setup
+clear
 
-echo "Reboot? (y/n)"
+# make initramfs
+case $1 in
+	"initrd")
+	  echo "> making initramfs"
+	  
+	  printf "kernel string: "
+	  read dracut_kernel_str
+	  
+	  printf "initramfs compression method: "
+	  read initrd_compress
+
+	  dracut --hostonly \
+	  --$initrd_compress \
+	  --kmoddir "/lib/modules/$dracut_kernel_str/" \
+	  --kver "$drauct_kernel_str" \
+	  --force \
+	  /boot/initramfs-$dracut_kernel_str.img
+	;;
+	
+	*)
+	  echo "skipping initramfs"
+	;;
+esac	
+
+# make boot entry
+case $2 in
+	"efibootmgr")
+	  echo "--  efi  --"
+	  efibootmgr
+          
+	  printf "boot entry to delete > " 
+	  read num
+
+	  efibootmgr -b $num -B
+
+	  echo "-- LSBLK -- "
+	  lsblk
+
+	  echo "-- /boot --"
+	  ls /boot
+
+	  echo "> making efibootmgr entry"
+
+	  printf "disk: "
+	  read disk
+
+	  printf "partition number: "
+	  read part
+
+	  printf "label: "
+	  read label
+
+	  printf "kernel image: "
+	  read efi_kernel_str
+
+	  printf "initramfs image (include a \ prefix): "
+	  read initrd_img
+          
+	  efibootmgr --create \
+	  --disk $disk \
+	  --part $part \
+	  --label $label \
+	  --loader "$efi_kernel_str" \
+	  --unicode "root=UUID=9c486c06-c1af-4825-a717-1a6f14839116 ro initrd=$initrd_img"
+	;;
+
+	"grub")
+	 grub-mkconfig -o /boot/grub/grub.cfg
+	;;
+
+	*)
+	 echo "skipping boot procedures"
+	;;
+esac
+
+printf "reboot? (y/n): "
 read choice
 
 case $choice in
