@@ -1,6 +1,4 @@
-NOTE  - this profile was NOT built with enterprise policy features in mind,
-        nor was it built with support for non-linux based systems 
-        in mind. run at your own risk.
+NOTE  - this profile was NOT built with enterprise policy features in mind.
 
         the user/user-overrides.js files as well as updater.sh are not mine, 
         they come from the arkenfox/user.js repository, see it here:
