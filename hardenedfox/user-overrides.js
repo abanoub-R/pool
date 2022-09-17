@@ -23,4 +23,4 @@ user_pref("browser.newtabpage.enabled", true);
 user_pref("keyword.enabled", true);
 
 // cosmetic
-user_pref("widget.non-native-theme.gtk.scrollbar.round-thumb	false");
+user_pref("widget.non-native-theme.gtk.scrollbar.round-thumb", false);
