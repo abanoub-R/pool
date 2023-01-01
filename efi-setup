@@ -1,2 +1,0 @@
-dracut --hostonly --lz4 -k "/lib/modules/$1/" --force /boot/initramfs-$1.img
-efibootmgr --disk /dev/nvme0n1 --part 1 --create --label "Gentoo $1" --loader "vmlinuz-$1" --unicode 'root=UUID=9c486c06-c1af-4825-a717-1a6f14839116 ro initrd=\initramfs-$1.img'
