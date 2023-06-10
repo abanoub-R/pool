@@ -1,0 +1,109 @@
+#!/bin/bash
+
+# Attempts to "patch" .desktop files for terminal apps.
+# May or may not be neccesary for your system. I had 
+# to make this because my .desktop files just wouldn't
+# launch no matter what I did. Maybe its because I use
+# gentoo and something got fucked up with XWayland or
+# whatever, either way, If I need this, someone out there
+# might also need it.
+
+# Based on what I've seen, some GUI apps also may not launch
+# so if you have a potential fix for that and want me to add 
+# it here, email me at abrayad07@gmail.com
+
+# This script was written mostly with ChatGPT. 
+# I do not take ownership of any of the code 
+# written in this file.
+
+# Assign the arguments to variables
+mode="$1"
+
+# Operating mode, specified in first argument
+# Only run for terminal apps
+if [[ $mode == "terminal" ]]; then
+	
+	# Check if the required arguments are provided
+	if [ $# -lt 2 ]; then
+  		echo "Insufficient arguments. Usage: $0 terminal [your_terminal] [desktop_file_path]"
+  		exit 1
+	fi
+
+	# Check if the script is being run as root
+	if [ "$(id -u)" != "0" ]; then
+  		echo "This script needs to be run as root."
+  		exit 1
+	fi
+
+	terminal="$2"
+	desktop_file="$3"
+	desktop_file_name="$(basename $desktop_file .desktop)"
+
+	# Replace the "Exec=" line with the updated command
+	if ! sed -i "s|^Exec=.*|Exec=$terminal -e $desktop_file_name | " "$desktop_file"; then
+		echo "Error: Failed to specify terminal execution"
+		exit 1
+	fi
+        
+	echo "Updated terminal execution spec."
+
+	# Replace the "Terminal=" line with "Terminal=false"
+	if ! sed -i "s|^Terminal=.*|Terminal=false|" "$desktop_file"; then
+		echo "Error: Failed to set 'Terminal=' to false"
+		exit 1
+	fi
+
+	echo "Set Terminal= to false."
+
+# Adds arguments to executable path
+elif [[ $mode = "modify" ]]; then
+ 
+	# Check if the required arguments are provided
+	if [ $# -lt 1 ]; then
+  		echo "Insufficient arguments. Usage: $0 modify [desktop_file_path]"
+  		exit 1
+	fi
+
+	# Check if the script is being run as root
+	if [ "$(id -u)" != "0" ]; then
+  		echo "This script needs to be run as root."
+  		exit 1
+	fi
+
+	desktop_file="$2"
+
+	# Check if the specified .desktop file exists
+  	if [[ ! -f $desktop_file ]]; then
+    		echo "Error: The specified .desktop file does not exist."
+    		exit 1
+  	fi
+
+	# This shit too hard man, originally I was going to make
+	# it use sed to add the args after the name of exec, but it
+	# just won't work so instead i'll just send the user to $EDITOR
+	# for the .desktop file given
+        
+	# Initialize manual editor variable
+	editor_manual="vim"
+
+	# Check if the $EDITOR variable is set
+	if [[ -z $EDITOR ]]; then
+  		echo "The \$EDITOR variable is not set, please type the command for your preferred editor: "
+		read $editor_manual
+  		export EDITOR="$editor_manual"
+	fi
+
+	# Execute editor on file
+	"$EDITOR" "$desktop_file"
+  	echo "Modified the .desktop file to add arguments."
+
+# Print help
+elif [[ $mode == "help" ]]; then
+	echo "Usage: "
+	echo " xdg-desktop-patcher terminal <path_to_desktop_file>"
+	echo " xdg-desktop-patcher modify <path_to_desktop_file> <arguments>"
+	echo " xdg-desktop-patcher help"
+	echo "	- terminal : makes .desktop file terminal compatibile"
+	echo "  - modify   : adds arguments to Exec="
+	echo "  - help     : show this help"
+fi
