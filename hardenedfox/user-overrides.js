@@ -24,3 +24,11 @@ user_pref("keyword.enabled", true);
 
 // cosmetic
 user_pref("widget.non-native-theme.gtk.scrollbar.round-thumb", false);
+
+// For a chrome like cosmetic experience, enable the following prefs
+// userChrome.padding.drag_space to true
+// userChrome.padding.drag_space.maximized to true
+// userChrome.padding.first_tab to true
+// userChrome.padding.first_tab.always to true
+// Then in the lepton userChrome sources, go to where it
+// mentions the 1st pref i mentioned and set it to 4.
