@@ -1,0 +1,18 @@
+#!/bin/bash
+
+# Run desktop files interactively
+# Parses file name after indexing it from XDG_DATA_DIRS
+
+# Split XDG_DATA_DIRS
+IFS=":" read -ra LOCATIONS <<< "$XDG_DATA_DIRS"
+
+# Go through each part of the path via loop
+for path in "${LOCATIONS[@]}"; do
+	command=$(find $path -name "*$1.desktop")
+	if [ $? -eq 0 ]; then
+		echo "dsk: $1 found in $path, running."
+		gio launch $command
+	else
+		echo "dsk: $1 not found in $path"
+	fi
+done
