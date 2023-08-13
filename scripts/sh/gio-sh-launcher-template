@@ -6,3 +6,6 @@
 # and run off of that, but I think one-case is more optimal.
 
 gio launch /usr/share/applications/$1
+
+# If a flatpak needs to be ran
+gio launch /home/$USER/.local/share/flatpak/exports/share/applications/$
