@@ -8,4 +8,4 @@
 gio launch /usr/share/applications/$1
 
 # If a flatpak needs to be ran
-gio launch /home/$USER/.local/share/flatpak/exports/share/applications/$
+gio launch /home/$USER/.local/share/flatpak/exports/share/applications/$1
