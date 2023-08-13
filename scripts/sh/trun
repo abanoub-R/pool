@@ -1,0 +1,8 @@
+#!/bin/bash
+
+# Tries to open a terminal program inside a terminal, as if it were a real window.
+
+# $TERM will not work on menus due to $TERM being set when the terminal runs,
+# there may be another way to implement it but for now I'll just put alacritty
+
+alacritty -e $1

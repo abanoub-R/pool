@@ -1,0 +1,8 @@
+#!/bin/bash
+
+# Template for launching desktop files via gio from the terminal (or bemenu)
+# the given example will showcase a one-case launch, i.e steam.
+# If needed, a shell script could be implemented to take the first argument
+# and run off of that, but I think one-case is more optimal.
+
+gio launch /usr/share/applications/$1
