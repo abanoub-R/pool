@@ -1,18 +1,58 @@
 #!/bin/bash
 
+# NOTE: If you plan on using terminal .desktop files, unless you are
+# 		using the following terminals:
+#
+#			- gnome-terminal
+#			- mate-terminal
+#			- xfce4-terminal
+#			- nxterm
+#			- color-xterm
+#			- rxvt
+# 			- dtterm
+#			- xterm
+#
+# 		A wrapper script that simulates a supported terminal will be
+# 		required. Below is one that assumes you use alacritty, but
+# 		any terminal can work as a substitute
+#
+#		https://github.com/abanoub-R/pool/blob/main/scripts/sh/gnome-terminal-dummy
+
 # Run desktop files interactively
 # Parses file name after indexing it from XDG_DATA_DIRS
 
 # Split XDG_DATA_DIRS
 IFS=":" read -ra LOCATIONS <<< "$XDG_DATA_DIRS"
 
+# Use $1 as what to launch
+ORIGINAL=$1
+
+# Standard deviation
+DESIRED_LOWER=${ORIGINAL,}
+DESIRED_UPPER=${ORIGINAL^}
+
 # Go through each part of the path via loop
-for path in "${LOCATIONS[@]}"; do
-	command=$(find $path -name "*$1.desktop")
-	if [ $? -eq 0 ]; then
-		echo "dsk: $1 found in $path, running."
-		gio launch $command
+for CURRENT_DIR in "${LOCATIONS[@]}"; do
+	# Index the current directory for the .destktop file with find.
+	# Run lowercase first since thats more common compared to uppercase
+
+	# Check if found
+	COMMAND=$(find $CURRENT_DIR -name "*${DESIRED_LOWER}.desktop" -print -quit);
+	if [[ -n "$COMMAND" ]]; then
+		echo "dsk: $COMMAND found in $CURRENT_DIR, running now"
+		gio launch "$COMMAND"
+		exit 0
 	else
-		echo "dsk: $1 not found in $path"
+		# Check for uppercase, if not found, quit.
+		NEW_COMMAND=$(find $CURRENT_DIR -name "*${DESIRED_UPPER}.desktop" -print -quit );
+		if [[ -n "$NEW_COMMAND" ]]; then
+			echo "dsk: $NEW_COMMAND found in $CURRENT_DIR, running now"
+			gio launch "$NEW_COMMAND"
+			exit 0
+		else
+			# Give up
+			echo "dsk: $NEW_COMMAND not found in $CURRENT_DIR"
+			exit 1
+		fi
 	fi
 done
