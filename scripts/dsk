@@ -1,0 +1,39 @@
+#!/bin/bash
+
+# Run desktop files interactively
+# Parses file name after indexing it from XDG_DATA_DIRS
+
+# Split XDG_DATA_DIRS
+IFS=":" read -ra LOCATIONS <<< "$XDG_DATA_DIRS"
+
+# Use $1 as what to launch
+ORIGINAL=$1
+
+# Standard deviation
+DESIRED_LOWER=${ORIGINAL,}
+DESIRED_UPPER=${ORIGINAL^}
+
+# Go through each part of the path via loop
+for CURRENT_DIR in "${LOCATIONS[@]}"; do
+	# Index the current directory for the .destktop file with find.
+	# Run lowercase first since thats more common compared to uppercase
+
+	# Check if found
+	COMMAND=$(find $CURRENT_DIR -name "*${DESIRED_LOWER}.desktop" -print -quit);
+	if [[ -n "$COMMAND" ]]; then
+		echo "dsk: $COMMAND found in $CURRENT_DIR, running now"
+		gio launch "$COMMAND"
+		exit 0
+	else
+		# Check for uppercase, if not found, quit.
+		NEW_COMMAND=$(find $CURRENT_DIR -name "*${DESIRED_UPPER}.desktop" -print -quit );
+		if [[ -n "$NEW_COMMAND" ]]; then
+			echo "dsk: $NEW_COMMAND found in $CURRENT_DIR, running now"
+			gio launch "$NEW_COMMAND"
+			exit 0
+		else
+			# Give up
+			echo "dsk: $NEW_COMMAND not found in $CURRENT_DIR"
+		fi
+	fi
+done
