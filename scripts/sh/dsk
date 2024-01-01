@@ -1,23 +1,5 @@
 #!/bin/bash
 
-# NOTE: If you plan on using terminal .desktop files, unless you are
-# 		using the following terminals:
-#
-#			- gnome-terminal
-#			- mate-terminal
-#			- xfce4-terminal
-#			- nxterm
-#			- color-xterm
-#			- rxvt
-# 			- dtterm
-#			- xterm
-#
-# 		A wrapper script that simulates a supported terminal will be
-# 		required. Below is one that assumes you use alacritty, but
-# 		any terminal can work as a substitute
-#
-#		https://github.com/abanoub-R/pool/blob/main/scripts/sh/gnome-terminal-dummy
-
 # Run desktop files interactively
 # Parses file name after indexing it from XDG_DATA_DIRS
 
@@ -52,7 +34,6 @@ for CURRENT_DIR in "${LOCATIONS[@]}"; do
 		else
 			# Give up
 			echo "dsk: $NEW_COMMAND not found in $CURRENT_DIR"
-			exit 1
 		fi
 	fi
 done
