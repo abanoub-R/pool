@@ -5,6 +5,11 @@
 #
 #       basename.ext.txt
 
+# NOTE: below code expects
+#       sources to be under
+#       subdirectory in
+#       sources
+
 from PIL import Image
 
 import pytesseract
